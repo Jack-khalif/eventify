@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom"
 
+import { useParams, Link } from "react-router-dom";   // add Link import
 export default function EventDetails(){
 
   const { id } = useParams()
@@ -24,20 +24,25 @@ export default function EventDetails(){
         Event description will appear here.
       </p>
 
-      <button
-        style={{
-          marginTop:"20px",
-          background:"#14B8A6",
-          border:"none",
-          padding:"14px 24px",
-          borderRadius:"8px",
-          color:"white",
-          fontWeight:"bold",
-          cursor:"pointer"
-        }}
-      >
-        Buy Ticket
-      </button>
+      
+      <Link
+         to={`/checkout/${id}`}
+            style={{
+                marginTop: "20px",
+                background: "#14B8A6",
+                border: "none",
+                padding: "14px 24px",
+                borderRadius: "8px",
+                color: "white",
+                fontWeight: "bold",
+                cursor: "pointer",
+                display: "inline-block",
+                textDecoration: "none"
+            }}
+            >
+            Buy Ticket
+      </Link>
+      
 
     </div>
 
