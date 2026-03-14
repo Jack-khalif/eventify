@@ -1,10 +1,12 @@
 import Navbar from "./components/Navbar"
+import Hero from "./components/Hero"
 
 function App() {
   return (
     <>
       <Navbar />
-      <h1>Welcome to Eventify, Founder Jack. You are going places</h1>
+      <Hero/>
+      <h1>Welcome to Eventify,</h1>
     </>
   )
 }
