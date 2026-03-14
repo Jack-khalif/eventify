@@ -1,12 +1,14 @@
 import Navbar from "./components/Navbar"
 import Hero from "./components/Hero"
+import FeaturedEvents from "./components/FeatureEvents"
 
 function App() {
   return (
     <>
       <Navbar />
       <Hero/>
-      <h1>Welcome to Eventify,</h1>
+      <FeaturedEvents/>
+      
     </>
   )
 }
