@@ -1,16 +1,30 @@
 import Navbar from "./components/Navbar"
-import Hero from "./components/Hero"
-import FeaturedEvents from "./components/FeatureEvents"
 
-function App() {
-  return (
-    <>
-      <Navbar />
-      <Hero/>
-      <FeaturedEvents/>
-      
-    </>
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+
+import Home from "./pages/Home"
+import EventDetails from "./pages/EventDetails"
+
+function App(){
+
+  return(
+
+    <BrowserRouter>
+
+      <Navbar/>
+
+      <Routes>
+
+        <Route path="/" element={<Home/>} />
+
+        <Route path="/event" element={<EventDetails/>} />
+
+      </Routes>
+
+    </BrowserRouter>
+
   )
+
 }
 
 export default App
