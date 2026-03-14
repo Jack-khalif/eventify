@@ -1,10 +1,14 @@
+import { useParams } from "react-router-dom"
+
 export default function EventDetails(){
+
+  const { id } = useParams()
 
   return(
 
     <div style={{padding:"40px"}}>
 
-      <h1>AI & Machine Learning Bootcamp</h1>
+      <h1>Event: {id}</h1>
 
       <img
         src="https://images.unsplash.com/photo-1540575467063-178a50c2df87"
@@ -17,15 +21,8 @@ export default function EventDetails(){
       />
 
       <p style={{marginTop:"20px"}}>
-        Join us for a hands-on workshop introducing machine learning,
-        AI tools and modern data science workflows.
+        Event description will appear here.
       </p>
-
-      <h3 style={{marginTop:"20px"}}>Date</h3>
-      <p>June 12</p>
-
-      <h3>Location</h3>
-      <p>Nairobi</p>
 
       <button
         style={{
