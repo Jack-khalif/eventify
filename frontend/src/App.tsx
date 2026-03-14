@@ -1,30 +1,25 @@
-import Navbar from "./components/Navbar"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./layout/Layout";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Home from "./pages/Home";
+import EventDetails from "./pages/EventDetails";
 
-import Home from "./pages/Home"
-import EventDetails from "./pages/EventDetails"
-
-function App(){
-
-  return(
-
+// We will add more pages here soon (Events, Dashboard, etc.)
+function App() {
+  return (
     <BrowserRouter>
-
-      <Navbar/>
-
       <Routes>
-
-        <Route path="/" element={<Home/>} />
-
-        <Route path="/event/:id" element={<EventDetails/>} />
-
+        {/* All pages go inside Layout */}
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/event/:id" element={<EventDetails />} />
+          
+          {/* Future pages will be added here */}
+          {/* <Route path="/events" element={<Events />} /> */}
+        </Route>
       </Routes>
-
     </BrowserRouter>
-
-  )
-
+  );
 }
 
-export default App
+export default App;
