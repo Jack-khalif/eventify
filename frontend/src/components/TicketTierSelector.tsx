@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEffect } from "react";
 
 type TicketTier = {
   name: string;
@@ -8,13 +9,19 @@ type TicketTier = {
 
 type TicketTierSelectorProps = {
   tiers: TicketTier[];
-  onSelect?: (tierName: string, quantity: number) => void; // placeholder for later
+  onSelectionChange?: (tierName: string | null, quantity: number) => void;
 };
 
-export default function TicketTierSelector({ tiers }: TicketTierSelectorProps) {
+export default function TicketTierSelector({ tiers, onSelectionChange }: TicketTierSelectorProps) {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
 
+  // NEW: notify parent whenever selection changes
+  useEffect(() => {
+    if (onSelectionChange) {
+      onSelectionChange(selectedTier, quantity);
+    }
+  }, [selectedTier, quantity, onSelectionChange]);
   return (
     <div style={{ margin: "32px 0" }}>
       <h3 style={{ fontSize: "20px", marginBottom: "16px" }}>Choose your ticket</h3>
