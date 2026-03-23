@@ -1,40 +1,17 @@
-import EventCard from "./EventCard"
-import { events } from "../data/events"
+import { events } from "../data/events";
+import EventCard from "./EventCard";
 
-export default function FeaturedEvents(){
-
-  return(
-
-    <section className="container">
-
-      <h2 style={{marginBottom:"30px"}}>
-        Featured Events
-      </h2>
-
-      <div style={{
-        display:"grid",
-        gridTemplateColumns:"repeat(auto-fit, minmax(250px,1fr))",
-        gap:"20px"
-      }}>
-
-        {events.map((event) => (
-
-          <EventCard
-            key={event.id}
-             id={event.id}
-            title={event.title}
-            date={event.date}
-            location={event.location}
-            price={event.price}
-            image={event.image}
-          />
-
-        ))}
-
-      </div>
-
-    </section>
-
-  )
-
+export default function FeaturedEvents() {
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",  // responsive, 3–4 cols on desktop
+      gap: "24px",
+      paddingBottom: "60px",
+    }}>
+      {events.map((event) => (
+        <EventCard key={event.id} {...event} />
+      ))}
+    </div>
+  );
 }
