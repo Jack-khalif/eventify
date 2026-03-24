@@ -1,120 +1,135 @@
 export default function Hero() {
-  // Good starting image (vibrant but not too busy; change if you want)
-  const heroImage = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1600&auto=format&fit=crop&q=80";
+  // Using your vibrant starting image
+  const heroImage = "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&auto=format&fit=crop&q=80ps://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1600&auto=format&fit=crop&q=80";
 
   return (
+    // 1. Outer wrapper gives spacing on the left and right sides
     <section
       style={{
-        position: "relative",
-        height: "50vh",               // ← reduced from 90vh — less "too big"
-        minHeight: "500px",
-        maxHeight: "700px",
-        backgroundImage: `url(${heroImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        padding: "0 24px",
+        marginTop: "24px",
         display: "flex",
-        alignItems: "center",
         justifyContent: "center",
-        textAlign: "center",
-        overflow: "hidden",
       }}
     >
-      {/* Stronger blending overlay – navy gradient for uniformity */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(to bottom, rgba(15, 23, 42, 0.55) 0%, rgba(15, 23, 42, 0.85) 100%)", // softer top → darker bottom
-          zIndex: 1,
-        }}
-      />
-
-      {/* Optional subtle radial glow for depth */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "radial-gradient(circle at center, rgba(20, 184, 166, 0.08) 0%, transparent 70%)",
-          zIndex: 1,
-        }}
-      />
-
-      {/* Main content – centered, smaller than before */}
+      {/* 2. The inner div is the actual "Card" for the Hero */}
       <div
         style={{
           position: "relative",
-          zIndex: 2,
-          maxWidth: "1100px",
-          padding: "0 24px",
-          color: "white",
+          width: "100%",
+          maxWidth: "1200px", // Limits how wide the banner gets on big screens
+          minHeight: "450px", // Shorter height matches the Eventbrite look
+          borderRadius: "40px", // The smooth rounded corners
+          backgroundImage: `url(${heroImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
         }}
       >
-        <h1
-          style={{
-            fontSize: "clamp(2.8rem, 7vw, 4.2rem)", // responsive but not huge
-            fontWeight: "800",
-            marginBottom: "1.2rem",
-            lineHeight: 1.1,
-            textShadow: "0 2px 8px rgba(0,0,0,0.5)", // subtle shadow for blending/readability
-          }}
-        >
-          Discover Amazing Events Near You
-        </h1>
-
-        <p
-          style={{
-            fontSize: "clamp(1.2rem, 3.5vw, 1.4rem)",
-            opacity: 0.95,
-            marginBottom: "2.5rem",
-            maxWidth: "680px",
-            marginLeft: "auto",
-            marginRight: "auto",
-            textShadow: "0 1px 4px rgba(0,0,0,0.4)",
-          }}
-        >
-          Concerts, tech conferences, festivals, workshops and more — happening in Nairobi and beyond.
-        </p>
-
-        {/* Search bar – Eventbrite-inspired pill shape */}
+        {/* Dark overlay to make the highlighted text pop more */}
         <div
           style={{
+            position: "absolute",
+            inset: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            zIndex: 1,
+          }}
+        />
+
+        {/* 3. Main Content Wrapper */}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2,
+            textAlign: "center",
+            padding: "10px",
             display: "flex",
-            maxWidth: "620px",
-            margin: "0 auto",
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
-            borderRadius: "50px",
-            overflow: "hidden",
-            boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "10px", // Spacing between the text lines
           }}
         >
-          <input
-            type="text"
-            placeholder="Search events, artists, venues..."
+          {/* Small Top Badge ("LEVEL UP") */}
+          <div>
+            <span
+              style={{
+                backgroundColor: "#FBCFE8", // Soft pink
+                color: "#111827", // Dark text for contrast
+                padding: "4px 12px",
+                fontWeight: "800",
+                fontSize: "0.85rem",
+                textTransform: "uppercase",
+                letterSpacing: "3px",
+              }}
+            >
+              Level Up
+            </span>
+          </div>
+
+          {/* Large Highlighted Text Blocks */}
+          <h1
             style={{
-              flex: 1,
-              padding: "16px 24px",
-              border: "none",
-              fontSize: "1.1rem",
-              background: "transparent",
-              outline: "none",
-              color: "#0F172A",
+              margin: 0,
+              lineHeight: 1.4, // Increased slightly to separate the background blocks
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "20px",
             }}
-          />
+          >
+            <span
+              style={{
+                backgroundColor: "#93C5FD", // Soft blue
+                color: "#111827",
+                padding: "2px 10px",
+                fontSize: "clamp(1.8rem, 5vw, 3.5rem)", // Responsive sizing
+                fontWeight: "900",
+                textTransform: "uppercase",
+              }}
+            >
+              From Late-Night Hackathons
+            </span>
+            <span
+              style={{
+                backgroundColor: "#93C5FD",
+                color: "#111827",
+                padding: "4px 16px",
+                fontSize: "clamp(1.8rem, 5vw, 3.5rem)",
+                fontWeight: "900",
+                textTransform: "uppercase",
+              }}
+            >
+              To Fun campus events
+            </span>
+          </h1>
+
+          {/* 4. White Pill CTA Button */}
           <button
             style={{
-              backgroundColor: "#14B8A6",
-              color: "white",
+              marginTop: "16px",
+              padding: "14px 32px",
+              backgroundColor: "white",
+              color: "#111827",
+              borderRadius: "50px", // Makes it a pill shape
               border: "none",
-              padding: "0 40px",
-              fontSize: "1.1rem",
-              fontWeight: "600",
+              fontSize: "1rem",
+              fontWeight: "700",
               cursor: "pointer",
-              transition: "background-color 0.2s",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              transition: "transform 0.2s ease, box-shadow 0.2s ease",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#0EA78E")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#14B8A6")}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "scale(1.05)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+            }}
           >
-            Search
+            See What's Happening
           </button>
         </div>
       </div>
