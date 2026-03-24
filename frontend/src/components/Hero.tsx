@@ -66,7 +66,7 @@ export default function Hero() {
                 letterSpacing: "1px",
               }}
             >
-              Get Into It
+              Level Up
             </span>
           </div>
 
@@ -91,7 +91,7 @@ export default function Hero() {
                 textTransform: "uppercase",
               }}
             >
-              From Pop Ballads
+              From Late-Night Hackathons
             </span>
             <span
               style={{
@@ -103,7 +103,7 @@ export default function Hero() {
                 textTransform: "uppercase",
               }}
             >
-              To Emo Encores
+              To Fun campus events
             </span>
           </h1>
 
@@ -129,7 +129,7 @@ export default function Hero() {
               e.currentTarget.style.transform = "scale(1)";
             }}
           >
-            Get Into Live Music
+            See What's Happening
           </button>
         </div>
       </div>
