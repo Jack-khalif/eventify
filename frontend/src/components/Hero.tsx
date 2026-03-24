@@ -1,6 +1,6 @@
 export default function Hero() {
   // Using your vibrant starting image
-  const heroImage = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1600&auto=format&fit=crop&q=80";
+  const heroImage = "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&auto=format&fit=crop&q=80ps://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1600&auto=format&fit=crop&q=80";
 
   return (
     // 1. Outer wrapper gives spacing on the left and right sides
@@ -19,7 +19,7 @@ export default function Hero() {
           width: "100%",
           maxWidth: "1200px", // Limits how wide the banner gets on big screens
           minHeight: "450px", // Shorter height matches the Eventbrite look
-          borderRadius: "20px", // The smooth rounded corners
+          borderRadius: "40px", // The smooth rounded corners
           backgroundImage: `url(${heroImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -46,14 +46,14 @@ export default function Hero() {
             position: "relative",
             zIndex: 2,
             textAlign: "center",
-            padding: "20px",
+            padding: "10px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "16px", // Spacing between the text lines
+            gap: "10px", // Spacing between the text lines
           }}
         >
-          {/* Small Top Badge ("GET INTO IT") */}
+          {/* Small Top Badge ("LEVEL UP") */}
           <div>
             <span
               style={{
@@ -63,7 +63,7 @@ export default function Hero() {
                 fontWeight: "800",
                 fontSize: "0.85rem",
                 textTransform: "uppercase",
-                letterSpacing: "1px",
+                letterSpacing: "3px",
               }}
             >
               Level Up
@@ -78,14 +78,14 @@ export default function Hero() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "8px",
+              gap: "20px",
             }}
           >
             <span
               style={{
                 backgroundColor: "#93C5FD", // Soft blue
                 color: "#111827",
-                padding: "4px 16px",
+                padding: "2px 10px",
                 fontSize: "clamp(1.8rem, 5vw, 3.5rem)", // Responsive sizing
                 fontWeight: "900",
                 textTransform: "uppercase",
