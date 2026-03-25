@@ -4,6 +4,7 @@ import Events from "./pages/Events";
 import Checkout from "./pages/Checkout";
 import Confirmation from "./pages/Confirmation";
 
+
 import Home from "./pages/Home";
 import EventDetails from "./pages/EventDetails";
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/event/:id" element={<EventDetails />} />
           <Route path="/events" element={<Events />} />
           <Route path="/checkout/:id" element={<Checkout />} />
+          
         
           <Route path="/confirmation/:id" element={<Confirmation />} />
           {/* Future pages will be added here */}
