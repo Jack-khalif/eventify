@@ -1,5 +1,6 @@
 import Hero from "../components/Hero";
 import FeaturedEvents from "../components/FeaturedEvents";
+import CategoryIcons from "../components/CategoryIcons";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
 
       {/* Spacer / subtle separation */}
       <div style={{ height: "40px" }} />
+      <CategoryIcons />
 
       {/* Recommended events section - right below hero */}
       <section style={{
