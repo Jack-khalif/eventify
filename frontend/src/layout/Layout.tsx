@@ -1,18 +1,18 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar"; 
 
-// New concept: Layout + Outlet
-// This file wraps EVERY page with the Navbar automatically
 export default function Layout() {
   return (
-    <div>
-      <Navbar />           {/* Navbar appears on every page */}
-
-      <main>
-        <Outlet />         {/* This is where the actual page (Home, Events, etc.) appears */}
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      {/* Navbar sits at the very top of the app */}
+      <Navbar />
+      
+      {/* Outlet renders whatever page (Home, Checkout, etc.) the router is on */}
+      <main style={{ flex: 1 }}>
+        <Outlet />
       </main>
 
-      {/* Footer will go here later */}
+      {/*  <Footer /> here later! */}
     </div>
   );
 }
