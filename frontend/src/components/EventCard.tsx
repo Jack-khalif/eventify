@@ -70,7 +70,7 @@ export default function EventCards() {
       location: "Kenyatta University",
       price: "Free",
       image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=60",
-      badge: "Going fast",
+      badge: "Selling fast",
       badgeColor: "#FEE2E2", 
       badgeTextColor: "#991B1B",
     },
