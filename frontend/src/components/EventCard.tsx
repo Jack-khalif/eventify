@@ -65,7 +65,7 @@ export default function EventCards() {
     },
     {
       id: 7,
-      title: "IoT Data Pipelines Showcase",
+      title: "IoT Data Pipelines",
       date: "Tue, May 12 • 9:00 AM",
       location: "Kenyatta University",
       price: "Free",
