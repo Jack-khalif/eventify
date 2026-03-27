@@ -53,8 +53,9 @@ export default function CreateEvent() {
       });
 
       if (response.ok) {
+        const createdEvent = await response.json();
         alert("Event published successfully!");
-        navigate("/"); // Redirect to home so you can see it in the grid!
+        navigate(`/event/${createdEvent.id}`); // Redirect to home so you can see it in the grid!
       } else {
         const errorData = await response.json();
         console.error("Django validation error:", errorData);
