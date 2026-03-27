@@ -52,7 +52,9 @@ export default function Checkout() {
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    //  THE SMART PAYLOAD: Adjusts based on whether they are a guest or logged in
+    const token = localStorage.getItem("token");
+    
+    // The exact payload Django is expecting
     const orderPayload = {
       event_id: id,
       quantity: quantity,
@@ -61,10 +63,34 @@ export default function Checkout() {
       guest_email: isAuthenticated ? null : guestEmail,
     };
 
-    console.log("Ready to send to Django Tickets API:", orderPayload);
-    alert("Checkout complete! Check your browser console to see the payload.");
-    
-    navigate(`/`); // Send them home for now
+    try {
+      // 1. Setup headers. If they are logged in, flash the VIP Token!
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+      };
+      if (token) {
+        headers["Authorization"] = `Token ${token}`;
+      }
+
+      // 2. Send the order to the Django Factory
+      const response = await fetch("http://127.0.0.1:8000/api/tickets/purchase/", {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(orderPayload),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // 3. Success! We safely navigate them to a confirmation page and pass the ticket IDs along
+        navigate(`/confirmation/${id}`, { state: { ticketData: data } });
+      } else {
+        alert(`Checkout failed: ${JSON.stringify(data)}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error. Is Django running?");
+    }
   };
 
   if (isLoading) return <Loader />;
@@ -126,11 +152,11 @@ export default function Checkout() {
                 <h2 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#0F172A", margin: 0 }}>Contact Information</h2>
               </div>
 
-              {/*  DYNAMIC AUTH RENDERING */}
+              {/* DYNAMIC AUTH RENDERING */}
               {isAuthenticated ? (
                 <div style={{ backgroundColor: "#F0FDF4", border: "1px solid #BBF7D0", padding: "16px", borderRadius: "8px", marginBottom: "32px" }}>
                   <p style={{ margin: 0, color: "#166534", fontSize: "0.95rem" }}>
-                     You are logged in as <strong>{username}</strong>. 
+                     ✅ You are logged in as <strong>{username}</strong>. 
                     Your tickets will be attached to your account automatically!
                   </p>
                 </div>
