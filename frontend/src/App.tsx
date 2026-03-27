@@ -3,6 +3,7 @@ import Layout from "./layout/Layout";
 import Events from "./pages/Events";
 import Checkout from "./pages/Checkout";
 import Confirmation from "./pages/Confirmation";
+import ScrollToTop from "./components/ScrollToTop";
 
 
 import Home from "./pages/Home";
@@ -12,6 +13,7 @@ import EventDetails from "./pages/EventDetails";
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* All pages go inside Layout */}
         <Route element={<Layout />}>

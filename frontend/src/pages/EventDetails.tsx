@@ -1,8 +1,27 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Loader from "../components/Loader"; // 
 
 export default function EventDetails() {
-  const { id } = useParams(); // Grabs the ID from the URL (e.g., /event/1)
+  const { id } = useParams();
   const navigate = useNavigate();
+  
+  // 1. Set loading to TRUE by default
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 2. Simulate a backend network request taking 800 milliseconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false); // Turn off the loader after 0.8 seconds
+    }, 800);
+    
+    return () => clearTimeout(timer); // Cleanup function
+  }, [id]);
+
+  // 3. If it's loading, ONLY return the Loader component
+  if (isLoading) {
+    return <Loader />;
+  }
 
   // In a real app, we would fetch data from your backend using this ID. 
   // For the beta frontend, we will use a high-quality mock event.
