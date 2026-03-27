@@ -19,6 +19,7 @@ export default function EventDetails() {
 
   const [event, setEvent] = useState<Event | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Helper Functions
@@ -33,11 +34,11 @@ export default function EventDetails() {
     const dateObj = new Date(isoString);
     return dateObj.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   };
-  const handleShare = () => {
+ const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    alert("Event link copied! Ready to paste into WhatsApp.");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // Resets the button after 2 seconds
   };
-
   useEffect(() => {
     // Fetch the single event from Django using the ID from the URL
     fetch(`http://127.0.0.1:8000/api/events/${id}/`)
@@ -113,16 +114,33 @@ export default function EventDetails() {
               Reserve a spot
             </button>
             
-            {/*  THE NEW SHARE BUTTON GOES RIGHT HERE */}
-            <button 
-              onClick={handleShare}
-              style={{ width: "100%", padding: "12px", backgroundColor: "white", color: "#475569", border: "1px solid #CBD5E1", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: "18px", height: "18px" }}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
-              </svg>
-              Share Event
-            </button>
+            {/* 🚀 THE ELEGANT SHARE UI */}
+            <div style={{ marginTop: "16px" }}>
+              <p style={{ fontSize: "0.85rem", fontWeight: "600", color: "#64748B", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Share this event</p>
+              
+              <div style={{ display: "flex", gap: "8px" }}>
+                <input 
+                  type="text" 
+                  readOnly 
+                  value={window.location.href} 
+                  style={{ flex: 1, padding: "10px 12px", borderRadius: "8px", border: "1px solid #CBD5E1", backgroundColor: "#F8FAFC", color: "#475569", fontSize: "0.85rem", outline: "none", textOverflow: "ellipsis" }}
+                />
+                
+                <button 
+                  onClick={handleShare}
+                  style={{ padding: "10px 16px", backgroundColor: copied ? "#ECFDF5" : "#F1F5F9", color: copied ? "#059669" : "#475569", border: `1px solid ${copied ? "#A7F3D0" : "#CBD5E1"}`, borderRadius: "8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s ease", minWidth: "60px" }}
+                  title="Copy link"
+                >
+                  {copied ? (
+                    <span style={{ fontSize: "0.85rem", fontWeight: "700" }}>Copied!</span>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: "18px", height: "18px" }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
 
           </div>
         </div>
