@@ -6,22 +6,28 @@ export default function Confirmation() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // We grab the data that Checkout.tsx passed to us through the router state!
+  // Grab the data AND the image we passed from Checkout!
   const ticketData = location.state?.ticketData;
+  const eventImage = location.state?.eventImage;
 
   useEffect(() => {
-    // Security measure: If someone tries to just type /confirmation into the URL 
-    // without buying a ticket, kick them back to the home page.
     if (!ticketData) {
       navigate("/");
     }
   }, [ticketData, navigate]);
 
+  // Helper to format the image just like we do on the details page
+  const getImageUrl = (imagePath: string | undefined | null) => {
+    if (!imagePath) return "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60";
+    if (imagePath.startsWith('http')) return imagePath;
+    return `http://127.0.0.1:8000${imagePath}`;
+  };
+
   if (!ticketData) return null;
 
   return (
     <div style={{ backgroundColor: "#0F172A", minHeight: "100vh", padding: "60px 24px", fontFamily: "sans-serif" }}>
-      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "850px", margin: "0 auto" }}>
         
         {/* SUCCESS HEADER */}
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
@@ -40,10 +46,19 @@ export default function Confirmation() {
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           {ticketData.ticket_ids.map((ticketId: string, index: number) => (
             
-            /* 🎟️ THE INDIVIDUAL TICKET CARD */
+            /* 🎟️ THE UPGRADED TICKET CARD */
             <div key={ticketId} style={{ display: "flex", backgroundColor: "white", borderRadius: "16px", overflow: "hidden", boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)" }}>
               
-              {/* MAIN TICKET BODY (Left Side) */}
+              {/* 🚀 NEW: THE EVENT POSTER BANNER (Left Side) */}
+              <div style={{ 
+                width: "180px", 
+                backgroundImage: `url(${getImageUrl(eventImage)})`, 
+                backgroundSize: "cover", 
+                backgroundPosition: "center",
+                borderRight: "1px solid #E2E8F0"
+              }} />
+
+              {/* MAIN TICKET BODY (Middle) */}
               <div style={{ flex: 1, padding: "32px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
@@ -54,12 +69,12 @@ export default function Confirmation() {
                       Ticket {index + 1} of {ticketData.quantity}
                     </span>
                   </div>
-                  <h2 style={{ fontSize: "2rem", fontWeight: "800", color: "#0F172A", margin: "0 0 8px 0", lineHeight: 1.1 }}>
+                  <h2 style={{ fontSize: "1.75rem", fontWeight: "800", color: "#0F172A", margin: "0 0 8px 0", lineHeight: 1.2 }}>
                     {ticketData.event}
                   </h2>
                 </div>
 
-                <div style={{ marginTop: "32px" }}>
+                <div style={{ marginTop: "24px" }}>
                   <p style={{ fontSize: "0.85rem", color: "#64748B", textTransform: "uppercase", letterSpacing: "1px", margin: "0 0 4px 0", fontWeight: "600" }}>Ticket ID</p>
                   <p style={{ fontSize: "1.25rem", color: "#0F172A", margin: 0, fontWeight: "700", fontFamily: "monospace" }}>{ticketId}</p>
                 </div>
@@ -67,20 +82,17 @@ export default function Confirmation() {
 
               {/* PERFORATION LINE (The dashed cut-out effect) */}
               <div style={{ width: "2px", borderLeft: "3px dashed #CBD5E1", position: "relative" }}>
-                {/* Top Notch */}
                 <div style={{ position: "absolute", top: "-15px", left: "-14px", width: "30px", height: "30px", backgroundColor: "#0F172A", borderRadius: "50%" }}></div>
-                {/* Bottom Notch */}
                 <div style={{ position: "absolute", bottom: "-15px", left: "-14px", width: "30px", height: "30px", backgroundColor: "#0F172A", borderRadius: "50%" }}></div>
               </div>
 
               {/* TICKET STUB / QR CODE (Right Side) */}
-              <div style={{ width: "220px", padding: "32px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", backgroundColor: "#F8FAFC" }}>
+              <div style={{ width: "200px", padding: "32px 24px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", backgroundColor: "#F8FAFC" }}>
                 <div style={{ padding: "12px", backgroundColor: "white", borderRadius: "12px", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" }}>
-                  {/* 🚀 THE SCANNABLE QR CODE */}
-                  <QRCode value={ticketId} size={130} level="H" />
+                  <QRCode value={ticketId} size={110} level="H" />
                 </div>
-                <p style={{ marginTop: "16px", fontSize: "0.85rem", color: "#64748B", textAlign: "center", fontWeight: "500" }}>
-                  Ready to scan at the door
+                <p style={{ marginTop: "16px", fontSize: "0.8rem", color: "#64748B", textAlign: "center", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  Scan at door
                 </p>
               </div>
 

@@ -19,7 +19,7 @@ export default function Checkout() {
   const [event, setEvent] = useState<Event | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 🚀 GUEST STATE: We need these if the user isn't logged in
+  // GUEST STATE: We need these if the user isn't logged in
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
 
@@ -82,8 +82,14 @@ export default function Checkout() {
       const data = await response.json();
 
       if (response.ok) {
-        // 3. Success! We safely navigate them to a confirmation page and pass the ticket IDs along
-        navigate(`/confirmation/${id}`, { state: { ticketData: data } });
+        // ✅ FIXED: The Magic Question Mark (Optional Chaining)
+        // This safely grabs event.image even if event is null/undefined
+        navigate(`/confirmation/${id}`, { 
+          state: { 
+            ticketData: data,
+            eventImage: event?.image 
+          } 
+        });
       } else {
         alert(`Checkout failed: ${JSON.stringify(data)}`);
       }
@@ -156,7 +162,7 @@ export default function Checkout() {
               {isAuthenticated ? (
                 <div style={{ backgroundColor: "#F0FDF4", border: "1px solid #BBF7D0", padding: "16px", borderRadius: "8px", marginBottom: "32px" }}>
                   <p style={{ margin: 0, color: "#166534", fontSize: "0.95rem" }}>
-                     ✅ You are logged in as <strong>{username}</strong>. 
+                    ✅ You are logged in as <strong>{username}</strong>. 
                     Your tickets will be attached to your account automatically!
                   </p>
                 </div>
