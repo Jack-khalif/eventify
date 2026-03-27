@@ -9,7 +9,8 @@ export default function CreateEvent() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
-  const [price, setPrice] = useState("Free");
+  const [price, setPrice] = useState("0.00");
+  const [capacity,setcapacity] = useState("100");
   const [description, setDescription] = useState("");
   
   // Image State
@@ -25,25 +26,38 @@ export default function CreateEvent() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 🚀 CRITICAL: Because we are sending an image file, we MUST use FormData, not standard JSON!
+    // CRITICAL: Because we are sending an image file, we MUST use FormData, not standard JSON!
     const formData = new FormData();
     formData.append("title", title);
     // Combine date and time for Django's DateTimeField
     formData.append("date", `${date}T${time}:00Z`); 
     formData.append("location", location);
-    formData.append("price", price);
+    formData.append("ticket_price", price);
     formData.append("description", description);
+    formData.append("capacity", capacity);
     
-    if (imageFile) {
-      formData.append("image", imageFile); // Attach the actual file!
-    }
+    try {
+      // THE REAL BACKEND CONNECTION
+      const response = await fetch('http://127.0.0.1:8000/api/events/create/', {
+        method: 'POST',
+        body: formData, // The browser handles the multipart boundaries automatically!
+      });
 
-    // For now, we just log it. Next sprint, we will POST this to Django!
-    console.log("Ready to send to Django:", Object.fromEntries(formData));
-    alert("Form is ready! Check the console.");
+      if (response.ok) {
+        alert("Event published successfully!");
+        navigate("/"); // Redirect to home so you can see it in the grid!
+      } else {
+        const errorData = await response.json();
+        console.error("Django validation error:", errorData);
+        alert(`Failed to create event. Django says: ${JSON.stringify(errorData)}`);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      alert("Network error. Is your Django server running?");
+    }
   };
 
   return (
