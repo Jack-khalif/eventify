@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 export default function EventCards() {
+  const navigate = useNavigate();
   // Mock data for our event cards
   const events = [
     {
@@ -118,6 +120,7 @@ export default function EventCards() {
         {events.map((event) => (
           <div 
             key={event.id} 
+            onClick={() => navigate(`/event/${event.id}`)}
             style={{ 
               display: "flex", 
               flexDirection: "column", 
