@@ -1,28 +1,78 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
+
+interface Event {
+  id: number;
+  title: string;
+  date: string;
+  ticket_price: string;
+  image: string | null;
+}
 
 export default function Checkout() {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  // We use state to switch between "Select Tickets" (Step 1) and "Contact Info" (Step 2)
   const [step, setStep] = useState(1);
   const [quantity, setQuantity] = useState(1);
+  const [event, setEvent] = useState<Event | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock event data (in the future, fetch this using the 'id')
-  const event = {
-    title: "HealthTech & Entrepreneurship Summit 2026",
-    date: "Saturday, March 28, 2026 • 9:00 AM EAT",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60",
-    price: "Free",
+  // 🚀 GUEST STATE: We need these if the user isn't logged in
+  const [guestName, setGuestName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+
+  // Check auth status quietly
+  const isAuthenticated = !!localStorage.getItem("token");
+  const username = localStorage.getItem("username");
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/api/events/${id}/`)
+      .then(response => {
+        if (!response.ok) throw new Error("Event not found");
+        return response.json();
+      })
+      .then(data => {
+        setEvent(data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setIsLoading(false);
+      });
+  }, [id]);
+
+  const getImageUrl = (imagePath: string | undefined | null) => {
+    if (!imagePath) return "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60";
+    if (imagePath.startsWith('http')) return imagePath;
+    return `http://127.0.0.1:8000${imagePath}`;
   };
 
-  const handleCheckoutSubmit = (e: React.FormEvent) => {
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here is where you would normally send the data to your backend!
-    // For now, we instantly route them to the success page.
-    navigate(`/confirmation/${id}`);
+    
+    //  THE SMART PAYLOAD: Adjusts based on whether they are a guest or logged in
+    const orderPayload = {
+      event_id: id,
+      quantity: quantity,
+      is_guest: !isAuthenticated,
+      guest_name: isAuthenticated ? null : guestName,
+      guest_email: isAuthenticated ? null : guestEmail,
+    };
+
+    console.log("Ready to send to Django Tickets API:", orderPayload);
+    alert("Checkout complete! Check your browser console to see the payload.");
+    
+    navigate(`/`); // Send them home for now
   };
+
+  if (isLoading) return <Loader />;
+  if (!event) return <div style={{ textAlign: "center", padding: "60px" }}>Event not found.</div>;
+
+  const priceNum = parseFloat(event.ticket_price);
+  const isFree = priceNum === 0;
+  const total = (priceNum * quantity).toFixed(2);
 
   return (
     <div style={{ backgroundColor: "#F8FAFC", minHeight: "100vh", padding: "40px 24px" }}>
@@ -39,10 +89,11 @@ export default function Checkout() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "24px", borderBottom: "1px solid #E2E8F0" }}>
                 <div>
                   <h3 style={{ fontSize: "1.1rem", fontWeight: "600", color: "#0F172A", margin: "0 0 4px 0" }}>General Admission</h3>
-                  <p style={{ margin: 0, color: "#64748B", fontSize: "0.9rem" }}>{event.price}</p>
+                  <p style={{ margin: 0, color: "#64748B", fontSize: "0.9rem" }}>
+                    {isFree ? "Free" : `KES ${event.ticket_price}`}
+                  </p>
                 </div>
                 
-                {/* Quantity Dropdown */}
                 <select 
                   value={quantity} 
                   onChange={(e) => setQuantity(Number(e.target.value))}
@@ -59,12 +110,12 @@ export default function Checkout() {
                   onClick={() => setStep(2)}
                   style={{ padding: "14px 32px", backgroundColor: "#D24000", color: "white", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "600", cursor: "pointer" }}
                 >
-                  Register
+                  Continue to Details
                 </button>
               </div>
             </div>
           ) : (
-            /* --- STEP 2: CONTACT INFO --- */
+            /* --- STEP 2: CONFIRMATION & GUEST INFO --- */
             <form onSubmit={handleCheckoutSubmit}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
                 <button type="button" onClick={() => setStep(1)} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", padding: 0 }}>
@@ -75,28 +126,38 @@ export default function Checkout() {
                 <h2 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#0F172A", margin: 0 }}>Contact Information</h2>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <label style={{ fontSize: "0.9rem", fontWeight: "500", color: "#334155" }}>First name *</label>
-                  <input required type="text" style={{ padding: "12px", borderRadius: "6px", border: "1px solid #CBD5E1", fontSize: "1rem", outlineColor: "#14B8A6" }} />
+              {/*  DYNAMIC AUTH RENDERING */}
+              {isAuthenticated ? (
+                <div style={{ backgroundColor: "#F0FDF4", border: "1px solid #BBF7D0", padding: "16px", borderRadius: "8px", marginBottom: "32px" }}>
+                  <p style={{ margin: 0, color: "#166534", fontSize: "0.95rem" }}>
+                     You are logged in as <strong>{username}</strong>. 
+                    Your tickets will be attached to your account automatically!
+                  </p>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <label style={{ fontSize: "0.9rem", fontWeight: "500", color: "#334155" }}>Last name *</label>
-                  <input required type="text" style={{ padding: "12px", borderRadius: "6px", border: "1px solid #CBD5E1", fontSize: "1rem", outlineColor: "#14B8A6" }} />
-                </div>
-              </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "32px" }}>
+                  <p style={{ margin: 0, color: "#64748B", fontSize: "0.9rem", marginBottom: "8px" }}>
+                    You are checking out as a guest. We need your email to send you the tickets!
+                  </p>
+                  
+                  <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                    <label style={{ fontSize: "0.9rem", fontWeight: "600", color: "#334155" }}>Full Name</label>
+                    <input required type="text" value={guestName} onChange={(e) => setGuestName(e.target.value)} placeholder="e.g., Jane Doe" style={{ padding: "12px", borderRadius: "8px", border: "1px solid #CBD5E1", fontSize: "1rem" }} />
+                  </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "32px" }}>
-                <label style={{ fontSize: "0.9rem", fontWeight: "500", color: "#334155" }}>Email address *</label>
-                <input required type="email" style={{ padding: "12px", borderRadius: "6px", border: "1px solid #CBD5E1", fontSize: "1rem", outlineColor: "#14B8A6" }} />
-              </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                    <label style={{ fontSize: "0.9rem", fontWeight: "600", color: "#334155" }}>Email Address</label>
+                    <input required type="email" value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} placeholder="Where should we send your ticket?" style={{ padding: "12px", borderRadius: "8px", border: "1px solid #CBD5E1", fontSize: "1rem" }} />
+                  </div>
+                </div>
+              )}
 
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button 
                   type="submit"
                   style={{ padding: "14px 32px", backgroundColor: "#D24000", color: "white", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "600", cursor: "pointer", width: "100%" }}
                 >
-                  Complete Registration
+                  {isFree ? "Complete Registration" : `Pay KES ${total}`}
                 </button>
               </div>
             </form>
@@ -106,19 +167,20 @@ export default function Checkout() {
         {/* RIGHT COLUMN: Order Summary (Sticky) */}
         <div style={{ flex: "1 1 300px", maxWidth: "400px" }}>
           <div style={{ backgroundColor: "white", borderRadius: "12px", overflow: "hidden", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)", position: "sticky", top: "100px" }}>
-            <img src={event.image} alt="Event" style={{ width: "100%", height: "180px", objectFit: "cover" }} />
+            <img src={getImageUrl(event.image)} alt="Event" style={{ width: "100%", height: "180px", objectFit: "cover" }} />
             
             <div style={{ padding: "24px" }}>
               <h3 style={{ fontSize: "1.2rem", fontWeight: "700", color: "#0F172A", margin: "0 0 8px 0" }}>Order summary</h3>
+              <p style={{ fontSize: "0.9rem", color: "#64748B", margin: "0 0 16px 0", fontWeight: "600" }}>{event.title}</p>
               
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "16px", paddingBottom: "16px", borderBottom: "1px solid #E2E8F0" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "16px", borderBottom: "1px solid #E2E8F0" }}>
                 <span style={{ color: "#475569" }}>{quantity} x General Admission</span>
-                <span style={{ color: "#475569" }}>{event.price}</span>
+                <span style={{ color: "#475569" }}>{isFree ? "Free" : `KES ${event.ticket_price}`}</span>
               </div>
               
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "16px", fontWeight: "700", fontSize: "1.1rem", color: "#0F172A" }}>
                 <span>Total</span>
-                <span>{event.price}</span>
+                <span>{isFree ? "Free" : `KES ${total}`}</span>
               </div>
             </div>
           </div>

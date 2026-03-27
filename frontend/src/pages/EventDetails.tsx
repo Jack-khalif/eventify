@@ -33,6 +33,10 @@ export default function EventDetails() {
     const dateObj = new Date(isoString);
     return dateObj.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   };
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Event link copied! Ready to paste into WhatsApp.");
+  };
 
   useEffect(() => {
     // Fetch the single event from Django using the ID from the URL
@@ -101,12 +105,25 @@ export default function EventDetails() {
               <span style={{ fontSize: "1.25rem", fontWeight: "800", color: "#0F172A" }}>{event.ticket_price === "0.00" ? "Free" : `KES ${event.ticket_price}`}</span>
             </div>
 
+            {/* THE ORIGINAL RESERVE BUTTON */}
             <button 
               onClick={() => navigate(`/checkout/${id}`)}
-              style={{ width: "100%", padding: "16px", backgroundColor: "#14B8A6", color: "white", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "700", cursor: "pointer", transition: "background-color 0.2s" }}
+              style={{ width: "100%", padding: "16px", backgroundColor: "#14B8A6", color: "white", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "700", cursor: "pointer", transition: "background-color 0.2s", marginBottom: "12px" }}
             >
               Reserve a spot
             </button>
+            
+            {/*  THE NEW SHARE BUTTON GOES RIGHT HERE */}
+            <button 
+              onClick={handleShare}
+              style={{ width: "100%", padding: "12px", backgroundColor: "white", color: "#475569", border: "1px solid #CBD5E1", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: "18px", height: "18px" }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+              </svg>
+              Share Event
+            </button>
+
           </div>
         </div>
 
