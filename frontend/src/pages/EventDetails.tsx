@@ -1,123 +1,85 @@
-import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Loader from "../components/Loader"; // 
+import { useParams, useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
+
+// Blueprint for TypeScript
+interface Event {
+  id: number;
+  title: string;
+  date: string;
+  location: string;
+  ticket_price: string;
+  description: string;
+  image: string | null;
+}
 
 export default function EventDetails() {
-  const { id } = useParams();
+  const { id } = useParams(); 
   const navigate = useNavigate();
-  
-  // 1. Set loading to TRUE by default
-  const [isLoading, setIsLoading] = useState(true);
 
-  // 2. Simulate a backend network request taking 800 milliseconds
+  const [event, setEvent] = useState<Event | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Helper Functions
+  const getImageUrl = (imagePath: string | undefined | null) => {
+    if (!imagePath) return "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&auto=format&fit=crop&q=80";
+    if (imagePath.startsWith('http')) return imagePath;
+    return `http://127.0.0.1:8000${imagePath}`;
+  };
+
+  const formatEventDate = (isoString: string) => {
+    if (!isoString) return "Date TBA";
+    const dateObj = new Date(isoString);
+    return dateObj.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  };
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false); // Turn off the loader after 0.8 seconds
-    }, 800);
-    
-    return () => clearTimeout(timer); // Cleanup function
+    // Fetch the single event from Django using the ID from the URL
+    fetch(`http://127.0.0.1:8000/api/events/${id}/`)
+      .then(response => {
+        if (!response.ok) throw new Error("Event not found");
+        return response.json();
+      })
+      .then(data => {
+        setEvent(data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setIsLoading(false);
+      });
   }, [id]);
 
-  // 3. If it's loading, ONLY return the Loader component
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  // In a real app, we would fetch data from your backend using this ID. 
-  // For the beta frontend, we will use a high-quality mock event.
-  const event = {
-    title: "HealthTech & Entrepreneurship Summit 2026",
-    date: "Saturday, March 28, 2026",
-    time: "9:00 AM - 4:00 PM EAT",
-    location: "Kenyatta University Main Campus, Amphitheatre",
-    price: "Free",
-    organizer: "CampusTix Startups",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&auto=format&fit=crop&q=80",
-    description: `Join us for the premier intersection of healthcare innovation and student entrepreneurship. 
-    
-    Whether you are building the next big app for reading accessibility, designing medical hardware, or just want to network with fellow builders, this summit is for you.
-    
-    What to expect:
-    • Keynote speakers from leading MedTech startups.
-    • Networking sessions with investors and peers.
-    • Live pitch deck tear-downs.`,
-  };
+  if (isLoading) return <Loader />;
+  if (error || !event) return <div style={{ textAlign: "center", padding: "60px", fontSize: "1.2rem" }}>Event not found.</div>;
 
   return (
     <div style={{ backgroundColor: "#F8FAFC", minHeight: "100vh", paddingBottom: "60px" }}>
       
       {/* 1. Event Hero Image */}
-      {/* 1. Event Hero Image (Upgraded for Posters/Flyers) */}
-      <div 
-        style={{ 
-          width: "100%", 
-          height: "45vh", 
-          minHeight: "350px", 
-          position: "relative",
-          backgroundColor: "#0F172A", // Dark fallback
-          display: "flex",
-          justifyContent: "center",
-          overflow: "hidden"
-        }}
-      >
-        {/* The blurred background layer */}
-        <div 
-          style={{ 
-            position: "absolute", 
-            inset: "-20px", // Pulls it past the edges to hide hard blur lines
-            backgroundImage: `url(${event.image})`, 
-            backgroundSize: "cover", 
-            backgroundPosition: "center", 
-            filter: "blur(20px)", 
-            opacity: 0.5 
-          }} 
-        />
-        
-        {/* The actual uncropped poster */}
-        <img 
-          src={event.image} 
-          alt="Event Poster" 
-          style={{ 
-            position: "relative", 
-            zIndex: 1, 
-            height: "100%", 
-            maxWidth: "100%", 
-            objectFit: "contain", // 👈 This ensures the whole poster is always visible!
-            padding: "24px" // Gives it some breathing room
-          }} 
-        />
+      <div style={{ width: "100%", height: "45vh", minHeight: "350px", position: "relative", backgroundColor: "#0F172A", display: "flex", justifyContent: "center", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: "-20px", backgroundImage: `url(${getImageUrl(event.image)})`, backgroundSize: "cover", backgroundPosition: "center", filter: "blur(20px)", opacity: 0.5 }} />
+        <img src={getImageUrl(event.image)} alt="Event Poster" style={{ position: "relative", zIndex: 1, height: "100%", maxWidth: "100%", objectFit: "contain", padding: "24px" }} />
       </div>
 
       {/* 2. Main Content Container */}
       <div style={{ maxWidth: "1200px", margin: "-60px auto 0", padding: "0 24px", display: "flex", gap: "32px", position: "relative", zIndex: 10, flexWrap: "wrap" }}>
         
-        {/* LEFT COLUMN: Details */}
+        {/* LEFT COLUMN */}
         <div style={{ flex: "1 1 600px", backgroundColor: "white", borderRadius: "16px", padding: "32px", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" }}>
-          <span style={{ backgroundColor: "#E0F2FE", color: "#0369A1", padding: "4px 12px", borderRadius: "4px", fontSize: "0.85rem", fontWeight: "700", textTransform: "uppercase" }}>
-            Health & Tech
-          </span>
-          
           <h1 style={{ fontSize: "2.5rem", fontWeight: "800", color: "#0F172A", marginTop: "16px", marginBottom: "24px", lineHeight: 1.2 }}>
             {event.title}
           </h1>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "32px" }}>
-            {/* Date/Time Row */}
             <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
               <div style={{ width: "40px", height: "40px", borderRadius: "8px", backgroundColor: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>📅</div>
-              <div>
-                <p style={{ margin: 0, fontWeight: "600", color: "#0F172A" }}>{event.date}</p>
-                <p style={{ margin: 0, color: "#64748B", fontSize: "0.9rem" }}>{event.time}</p>
-              </div>
+              <div><p style={{ margin: 0, fontWeight: "600", color: "#0F172A" }}>{formatEventDate(event.date)}</p></div>
             </div>
-            
-            {/* Location Row */}
             <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
               <div style={{ width: "40px", height: "40px", borderRadius: "8px", backgroundColor: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>📍</div>
-              <div>
-                <p style={{ margin: 0, fontWeight: "600", color: "#0F172A" }}>{event.location}</p>
-                <p style={{ margin: 0, color: "#14B8A6", fontSize: "0.9rem", cursor: "pointer", fontWeight: "500" }}>View on Map</p>
-              </div>
+              <div><p style={{ margin: 0, fontWeight: "600", color: "#0F172A" }}>{event.location}</p></div>
             </div>
           </div>
 
@@ -136,21 +98,15 @@ export default function EventDetails() {
             
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
               <span style={{ fontSize: "1.1rem", color: "#475569" }}>General Admission</span>
-              <span style={{ fontSize: "1.25rem", fontWeight: "800", color: "#0F172A" }}>{event.price}</span>
+              <span style={{ fontSize: "1.25rem", fontWeight: "800", color: "#0F172A" }}>{event.ticket_price === "0.00" ? "Free" : `KES ${event.ticket_price}`}</span>
             </div>
 
             <button 
-              onClick={() => navigate(`/checkout/${id}`)} // Routes to our next step!
+              onClick={() => navigate(`/checkout/${id}`)}
               style={{ width: "100%", padding: "16px", backgroundColor: "#14B8A6", color: "white", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "700", cursor: "pointer", transition: "background-color 0.2s" }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#0EA78E"}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#14B8A6"}
             >
               Reserve a spot
             </button>
-            
-            <p style={{ textAlign: "center", color: "#64748B", fontSize: "0.85rem", marginTop: "16px", marginBottom: 0 }}>
-              No refunds. Secure checkout.
-            </p>
           </div>
         </div>
 

@@ -38,7 +38,13 @@ export default function CreateEvent() {
     formData.append("ticket_price", price);
     formData.append("description", description);
     formData.append("capacity", capacity);
-    
+    if (imageFile) {
+      console.log("SUCCESS: Image found in React state! Attaching to package...");
+      // We explicitly pass the file name as the third argument so the browser doesn't drop it
+      formData.append("image", imageFile, imageFile.name); 
+    } else {
+      console.warn("WARNING: No image selected! Sending text only.");
+    }
     try {
       // THE REAL BACKEND CONNECTION
       const response = await fetch('http://127.0.0.1:8000/api/events/create/', {
