@@ -4,6 +4,7 @@ import Events from "./pages/Events";
 import Checkout from "./pages/Checkout";
 import Confirmation from "./pages/Confirmation";
 import ScrollToTop from "./components/ScrollToTop";
+import CreateEvent from "./pages/CreateEvent";
 
 
 import Home from "./pages/Home";
@@ -21,7 +22,7 @@ function App() {
           <Route path="/event/:id" element={<EventDetails />} />
           <Route path="/events" element={<Events />} />
           <Route path="/checkout/:id" element={<Checkout />} />
-          
+          <Route path="/create-event" element={<CreateEvent />} />
         
           <Route path="/confirmation/:id" element={<Confirmation />} />
           {/* Future pages will be added here */}

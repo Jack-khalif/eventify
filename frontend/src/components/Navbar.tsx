@@ -100,9 +100,9 @@ export default function Navbar() {
 
         {/* 3. NAVIGATION LINKS */}
         <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-          <span style={{ fontSize: "0.95rem", fontWeight: "500", color: "#334155", cursor: "pointer" }}>Browse Events</span>
-          <span style={{ fontSize: "0.95rem", fontWeight: "500", color: "#334155", cursor: "pointer" }}>Create Event</span>
-          <span style={{ fontSize: "0.95rem", fontWeight: "500", color: "#334155", cursor: "pointer" }}>My Tickets</span>
+           <Link to="/create-event" style={{ fontSize: "0.95rem", fontWeight: "500", color: "#334155", textDecoration: "none" }}>
+                  Create Event
+                </Link>
           
           {/* Sign In / Profile Button */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
