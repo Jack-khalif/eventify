@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loader from './Loader';
 
-// 1. THE BLUEPRINT: Tells TypeScript exactly what data to expect from Django
+// 1. THE BLUEPRINT
 interface Event {
   id: number;
   title: string;
@@ -18,10 +18,32 @@ interface Event {
 export default function EventCards() {
   const navigate = useNavigate();
   
-  // 2. We tell useState to expect an array of 'Event' objects
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // ==========================================
+  // HELPER FUNCTIONS (Moved up here so everything can see them!)
+  // ==========================================
+  
+  const getImageUrl = (imagePath: string | undefined | null) => {
+    if (!imagePath) return "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60"; 
+    if (imagePath.startsWith('http')) return imagePath; 
+    return `http://127.0.0.1:8000${imagePath}`; 
+  };
+
+  const formatEventDate = (isoString: string) => {
+    if (!isoString) return "Date TBA";
+    const dateObj = new Date(isoString);
+    return dateObj.toLocaleString('en-US', { 
+      weekday: 'short', 
+      month: 'short', 
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    }).replace(',', ' •'); 
+  };
+  // ==========================================
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/events/') 
@@ -72,7 +94,6 @@ export default function EventCards() {
         </div>
       </div>
 
-      {/* 3. EMPTY STATE FALLBACK: What to show if Django returns [] */}
       {events.length === 0 ? (
         <div style={{ textAlign: "center", padding: "60px", color: "#64748B" }}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: "48px", height: "48px", margin: "0 auto 16px", opacity: 0.5 }}>
@@ -90,7 +111,7 @@ export default function EventCards() {
               style={{ display: "flex", flexDirection: "column", cursor: "pointer" }}
             >
               <div style={{ width: "100%", aspectRatio: "3/2", borderRadius: "12px", overflow: "hidden", marginBottom: "12px", position: "relative" }}>
-                <img src={event.image} alt={event.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s ease" }} onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"} onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"} />
+                <img src={getImageUrl(event.image)} alt={event.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s ease" }} onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"} onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"} />
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
@@ -100,9 +121,15 @@ export default function EventCards() {
                   </span>
                 )}
                 <h3 style={{ fontSize: "1.1rem", fontWeight: "700", color: "#0F172A", margin: "0 0 4px 0", lineHeight: 1.3 }}>{event.title}</h3>
-                <p style={{ fontSize: "0.9rem", fontWeight: "600", color: "#D97706", margin: "0 0 2px 0" }}>{event.date}</p>
-                <p style={{ fontSize: "0.9rem", color: "#64748B", margin: "0 0 8px 0" }}>{event.location}</p>
-                <p style={{ fontSize: "0.9rem", fontWeight: "600", color: "#334155", marginTop: "auto" }}>{event.price}</p>
+                <p style={{ fontSize: "0.9rem", fontWeight: "600", color: "#D97706", margin: "0 0 2px 0" }}>
+                  {formatEventDate(event.date)}
+                </p>
+                <p style={{ fontSize: "0.9rem", color: "#64748B", margin: "0 0 8px 0" }}>
+                  {event.location || "Location TBA"}
+                </p>
+                <p style={{ fontSize: "0.9rem", fontWeight: "600", color: "#334155", marginTop: "auto" }}>
+                  {event.price || "Free"}
+                </p>
               </div>
             </div>
           ))}
