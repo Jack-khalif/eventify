@@ -7,7 +7,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import CreateEvent from "./pages/CreateEvent";
 import Auth from "./Auth";
 import ScannerPage from "./pages/Scanner";
-
+import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import EventDetails from "./pages/EventDetails";
 
@@ -27,7 +27,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/scan" element={<ScannerPage />} />
           <Route path="/confirmation/:id" element={<Confirmation />} />
-          {/* Future pages will be added here */}
+          <Route path="/dashboard/:id" element={<Dashboard />} />
           {/* <Route path="/events" element={<Events />} /> */}
         </Route>
       </Routes>
