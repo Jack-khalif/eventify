@@ -10,6 +10,7 @@ import ScannerPage from "./pages/Scanner";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import EventDetails from "./pages/EventDetails";
+import ManageEvent from "./pages/ManageEvent";
 
 // We will add more pages here soon (Events, Dashboard, etc.) 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/scan" element={<ScannerPage />} />
           <Route path="/confirmation/:id" element={<Confirmation />} />
           <Route path="/dashboard/:id" element={<Dashboard />} />
+          <Route path="/manage/:id" element={<ManageEvent />} />
           {/* <Route path="/events" element={<Events />} /> */}
         </Route>
       </Routes>

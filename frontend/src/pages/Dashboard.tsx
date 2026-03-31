@@ -24,7 +24,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  //  SECURITY CHECK: Are they logged in?
+  // SECURITY CHECK: Are they logged in?
   const isAuthenticated = !!localStorage.getItem("token");
 
   useEffect(() => {
@@ -34,7 +34,11 @@ export default function Dashboard() {
       return;
     }
 
-    fetch(`http://127.0.0.1:8000/api/tickets/dashboard/${id}/`)
+    fetch(`http://127.0.0.1:8000/api/tickets/dashboard/${id}/`, {
+      headers: {
+        "Authorization": `Token ${localStorage.getItem("token")}`,
+      }
+    })
       .then(response => {
         if (!response.ok) throw new Error("Could not load dashboard.");
         return response.json();
@@ -49,6 +53,29 @@ export default function Dashboard() {
       });
   }, [id, isAuthenticated, navigate]);
 
+  // 🚀 NEW: The CSV Export Function
+  const downloadCSV = () => {
+    if (!data || data.recent_sales.length === 0) return;
+    
+    // Create the CSV headers
+    const headers = ["Ticket ID,Buyer Name,Email,Purchase Date,Status"];
+    
+    // Map the data into CSV rows
+    const rows = data.recent_sales.map(t => 
+      `${t.ticket_id},"${t.buyer}","${t.email}","${t.date}",${t.is_scanned ? "Checked In" : "Pending"}`
+    );
+    
+    // Combine and trigger the download
+    const csvContent = "data:text/csv;charset=utf-8," + headers.concat(rows).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `${data.event_title.replace(/\s+/g, '_')}_GuestList.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (isLoading) return <Loader />;
   if (error || !data) return <div style={{ textAlign: "center", padding: "60px", color: "#EF4444" }}>{error}</div>;
 
@@ -61,24 +88,29 @@ export default function Dashboard() {
     <div style={{ backgroundColor: "#F8FAFC", minHeight: "100vh", padding: "40px 24px", fontFamily: "sans-serif" }}>
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
         
-        {/* HEADER & NAVIGATION */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
+        {/* HEADER & NAVIGATION (Updated with Manage button) */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", flexWrap: "wrap", gap: "16px" }}>
           <div>
             <p style={{ color: "#64748B", margin: "0 0 4px 0", fontWeight: "600", textTransform: "uppercase", fontSize: "0.85rem" }}>Organizer Dashboard</p>
             <h1 style={{ color: "#0F172A", margin: 0, fontSize: "2rem", fontWeight: "800" }}>{data.event_title}</h1>
           </div>
-          <Link to="/scan" style={{ padding: "12px 24px", backgroundColor: "#10B981", color: "white", textDecoration: "none", borderRadius: "8px", fontWeight: "600", display: "flex", gap: "8px", alignItems: "center" }}>
-             Open Door Scanner
-          </Link>
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <Link to={`/manage/${id}`} style={{ padding: "12px 24px", backgroundColor: "#0F172A", color: "white", textDecoration: "none", borderRadius: "8px", fontWeight: "600", display: "flex", gap: "8px", alignItems: "center" }}>
+               Manage Event
+            </Link>
+            <Link to="/scan" style={{ padding: "12px 24px", backgroundColor: "#10B981", color: "white", textDecoration: "none", borderRadius: "8px", fontWeight: "600", display: "flex", gap: "8px", alignItems: "center" }}>
+                Open Scanner
+            </Link>
+          </div>
         </div>
 
-        {/*  ORGANIZER FEATURE GUIDE */}
+        {/* ORGANIZER FEATURE GUIDE */}
         <div style={{ backgroundColor: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: "12px", padding: "20px", marginBottom: "32px", display: "flex", gap: "16px", alignItems: "flex-start" }}>
           <div style={{ fontSize: "1.5rem" }}></div>
           <div>
             <h3 style={{ margin: "0 0 8px 0", color: "#1E3A8A", fontSize: "1.1rem" }}>Welcome to your Command Center</h3>
             <p style={{ margin: 0, color: "#2563EB", fontSize: "0.95rem", lineHeight: 1.5 }}>
-              Here you can track your live revenue and monitor door check-ins in real-time. Use the <strong>Open Door Scanner</strong> button above on your phone to start checking students in at the gate!
+              Here you can track your live revenue and monitor door check-ins in real-time. Use the <strong>Manage Event</strong> button to send email updates, or the <strong>Open Scanner</strong> button on your phone to check students in at the gate!
             </p>
           </div>
         </div>
@@ -111,10 +143,16 @@ export default function Dashboard() {
 
         </div>
 
-        {/* GUEST LIST TABLE */}
+        {/* GUEST LIST TABLE WITH CSV EXPORT */}
         <div style={{ backgroundColor: "white", borderRadius: "16px", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)", overflow: "hidden" }}>
-          <div style={{ padding: "24px", borderBottom: "1px solid #E2E8F0" }}>
-            <h2 style={{ margin: 0, fontSize: "1.25rem", color: "#0F172A", fontWeight: "700" }}>Recent Ticket Sales</h2>
+          <div style={{ padding: "24px", borderBottom: "1px solid #E2E8F0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
+            <h2 style={{ margin: 0, fontSize: "1.25rem", color: "#0F172A", fontWeight: "700" }}>Guest List</h2>
+            <button 
+              onClick={downloadCSV}
+              style={{ padding: "8px 16px", backgroundColor: "#F1F5F9", color: "#0F172A", border: "1px solid #CBD5E1", borderRadius: "6px", fontWeight: "600", cursor: "pointer", fontSize: "0.9rem", display: "flex", alignItems: "center", gap: "6px" }}
+            >
+              Download CSV
+            </button>
           </div>
           
           <div style={{ overflowX: "auto" }}>
