@@ -16,7 +16,7 @@ export default function ViewTicket() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/tickets/ticket/${id}/`)
+    fetch(`https://eventify-api-zm3d.onrender.com/api/tickets/ticket/${id}/`)
       .then((res) => {
         if (!res.ok) throw new Error("Ticket not found or invalid link.");
         return res.json();

@@ -47,7 +47,7 @@ export default function CreateEvent() {
     }
     try {
       // THE REAL BACKEND CONNECTION
-      const response = await fetch('http://127.0.0.1:8000/api/events/create/', {
+      const response = await fetch('https://eventify-api-zm3d.onrender.com/api/events/create/', {
         method: 'POST',
         body: formData, // The browser handles the multipart boundaries automatically!
       });

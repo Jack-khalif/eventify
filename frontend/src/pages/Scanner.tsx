@@ -25,7 +25,7 @@ export default function ScannerPage() {
 
     try {
       //  Send the ID to our Django Bouncer
-      const response = await fetch("http://127.0.0.1:8000/api/tickets/scan/", {
+      const response = await fetch("https://eventify-api-zm3d.onrender.com/api/tickets/scan/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

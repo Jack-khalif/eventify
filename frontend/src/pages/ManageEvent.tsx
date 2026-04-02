@@ -25,7 +25,7 @@ export default function ManageEvent() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/tickets/dashboard/${id}/blast/`, {
+      const response = await fetch(`https://eventify-api-zm3d.onrender.com/api/tickets/dashboard/${id}/blast/`, {
         method: "POST",
         headers: {
           "Authorization": `Token ${token}`,
@@ -69,7 +69,7 @@ export default function ManageEvent() {
         return;
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/events/${id}/update/`, {
+      const response = await fetch(`https://eventify-api-zm3d.onrender.com/api/events/${id}/update/`, {
         method: "PATCH",
         headers: {
           "Authorization": `Token ${token}`,

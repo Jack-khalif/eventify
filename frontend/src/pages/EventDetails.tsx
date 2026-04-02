@@ -26,7 +26,7 @@ export default function EventDetails() {
   const getImageUrl = (imagePath: string | undefined | null) => {
     if (!imagePath) return "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&auto=format&fit=crop&q=80";
     if (imagePath.startsWith('http')) return imagePath;
-    return `http://127.0.0.1:8000${imagePath}`;
+    return `https://eventify-api-zm3d.onrender.com${imagePath}`;
   };
 
   const formatEventDate = (isoString: string) => {
@@ -41,7 +41,7 @@ export default function EventDetails() {
   };
   useEffect(() => {
     // Fetch the single event from Django using the ID from the URL
-    fetch(`http://127.0.0.1:8000/api/events/${id}/`)
+    fetch(`https://eventify-api-zm3d.onrender.com/api/events/${id}/`)
       .then(response => {
         if (!response.ok) throw new Error("Event not found");
         return response.json();

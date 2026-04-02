@@ -29,7 +29,7 @@ export default function EventCards() {
   const getImageUrl = (imagePath: string | undefined | null) => {
     if (!imagePath) return "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60"; 
     if (imagePath.startsWith('http')) return imagePath; 
-    return `http://127.0.0.1:8000${imagePath}`; 
+    return `https://eventify-api-zm3d.onrender.com${imagePath}`; 
   };
 
   const formatEventDate = (isoString: string) => {
@@ -46,7 +46,7 @@ export default function EventCards() {
   // ==========================================
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/events/') 
+    fetch('https://eventify-api-zm3d.onrender.com/api/events/') 
       .then(response => {
         if (!response.ok) throw new Error('Failed to fetch events from Django');
         return response.json();

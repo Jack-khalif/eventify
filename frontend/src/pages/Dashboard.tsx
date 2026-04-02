@@ -34,7 +34,7 @@ export default function Dashboard() {
       return;
     }
 
-    fetch(`http://127.0.0.1:8000/api/tickets/dashboard/${id}/`, {
+    fetch(`https://eventify-api-zm3d.onrender.com/api/tickets/dashboard/${id}/`, {
       headers: {
         "Authorization": `Token ${localStorage.getItem("token")}`,
       }

@@ -27,7 +27,7 @@ export default function Auth() {
       : { username, email, password };
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000${endpoint}`, {
+      const response = await fetch(`https://eventify-api-zm3d.onrender.com${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

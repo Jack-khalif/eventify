@@ -19,13 +19,13 @@ export default function Checkout() {
   const [event, setEvent] = useState<Event | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 🚀 NEW: We now track an array of attendees!
+  //  NEW: We now track an array of attendees!
   const [attendees, setAttendees] = useState([{ name: "", email: "" }]);
 
   const isAuthenticated = !!localStorage.getItem("token");
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/events/${id}/`)
+    fetch(`https://eventify-api-zm3d.onrender.com/api/events/${id}/`)
       .then(response => {
         if (!response.ok) throw new Error("Event not found");
         return response.json();
@@ -43,7 +43,7 @@ export default function Checkout() {
   const getImageUrl = (imagePath: string | undefined | null) => {
     if (!imagePath) return "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60";
     if (imagePath.startsWith('http')) return imagePath;
-    return `http://127.0.0.1:8000${imagePath}`;
+    return `https://eventify-api-zm3d.onrender.com${imagePath}`;
   };
 
   // Dynamically update the number of forms when quantity changes
@@ -69,7 +69,7 @@ export default function Checkout() {
     e.preventDefault();
     const token = localStorage.getItem("token");
     
-    // 🚀 NEW: Send the array of attendees to Django
+    // NEW: Send the array of attendees to Django
     const orderPayload = {
       event_id: id,
       attendees: attendees, 
@@ -79,7 +79,7 @@ export default function Checkout() {
       const headers: HeadersInit = { "Content-Type": "application/json" };
       if (token) headers["Authorization"] = `Token ${token}`;
 
-      const response = await fetch("http://127.0.0.1:8000/api/tickets/purchase/", {
+      const response = await fetch("https://eventify-api-zm3d.onrender.com/api/tickets/purchase/", {
         method: "POST",
         headers: headers,
         body: JSON.stringify(orderPayload),
@@ -145,7 +145,7 @@ export default function Checkout() {
                 <h2 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#0F172A", margin: 0 }}>Attendee Details</h2>
               </div>
 
-              {/* 🚀 NEW: DYNAMICALLY RENDER FORMS BASED ON QUANTITY */}
+              {/*  NEW: DYNAMICALLY RENDER FORMS BASED ON QUANTITY */}
               <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "32px" }}>
                 {attendees.map((attendee, index) => (
                   <div key={index} style={{ padding: "16px", border: "1px solid #E2E8F0", borderRadius: "8px", backgroundColor: "#F8FAFC" }}>
