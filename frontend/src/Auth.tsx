@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   
   // Toggle between Login and Signup modes
   const [isLogin, setIsLogin] = useState(true);

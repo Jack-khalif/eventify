@@ -10,7 +10,7 @@ export default function CreateEvent() {
   const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
   const [price, setPrice] = useState("0.00");
-  const [capacity,setcapacity] = useState("100");
+  const [capacity] = useState("100");
   const [description, setDescription] = useState("");
   
   // Image State

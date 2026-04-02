@@ -22,7 +22,7 @@ export default function Checkout() {
   //  NEW: We now track an array of attendees!
   const [attendees, setAttendees] = useState([{ name: "", email: "" }]);
 
-  const isAuthenticated = !!localStorage.getItem("token");
+  //const isAuthenticated = !!localStorage.getItem("token");
 
   useEffect(() => {
     fetch(`https://eventify-api-zm3d.onrender.com/api/events/${id}/`)
