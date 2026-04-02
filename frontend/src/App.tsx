@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import EventDetails from "./pages/EventDetails";
 import ManageEvent from "./pages/ManageEvent";
+import ViewTicket from "./pages/ViewTicket";
 
 // We will add more pages here soon (Events, Dashboard, etc.) 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/confirmation/:id" element={<Confirmation />} />
           <Route path="/dashboard/:id" element={<Dashboard />} />
           <Route path="/manage/:id" element={<ManageEvent />} />
+          <Route path="/ticket/:id" element={<ViewTicket />} />
           {/* <Route path="/events" element={<Events />} /> */}
         </Route>
       </Routes>
