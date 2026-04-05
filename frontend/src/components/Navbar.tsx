@@ -29,7 +29,7 @@ export default function Navbar() {
         {/* 1. BRAND / LOGO AREA */}
         <Link to="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", cursor: "pointer" }}>
           <span style={{ fontSize: "1.5rem", fontWeight: "800", color: "#14B8A6", letterSpacing: "-0.5px" }}>
-            Campus<span style={{ color: "#0F172A" }}>Tix</span>
+            Event<span style={{ color: "#0F172A" }}>ify</span>
           </span>
         </Link>
 
