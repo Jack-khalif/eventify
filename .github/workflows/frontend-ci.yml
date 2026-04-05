@@ -26,9 +26,10 @@ jobs:
 
       # Step C: Install your packages
       - name: Install Dependencies
-        run: npm ci # 'ci' is like 'install', but strictly follows your package-lock.json
+        run: npm ci --prefix frontend # 'ci' is like 'install', but strictly follows your package-lock.json
 
       # Step D: Run the strict Vite/TypeScript build
       - name: Build the App
         # If this fails (like those unused variables earlier), the pipeline stops!
-        run: npm run build
+        run: npm run build --prefix frontend
+
