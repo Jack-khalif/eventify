@@ -5,6 +5,7 @@ import Loader from "../components/Loader";
 
 interface Event {
   id: string | number;
+  slug:string;
   title: string;
   date: string;
   location: string;
@@ -76,6 +77,7 @@ export default function Events() {
               <EventCard
                 key={event.id}
                 id={event.id.toString()}
+                slug={event.slug}
                 title={event.title}
                 date={event.date}
                 location={event.location}
