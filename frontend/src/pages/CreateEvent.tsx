@@ -51,7 +51,7 @@ export default function CreateEvent() {
 
       if (response.ok) {
         const createdEvent = await response.json();
-        navigate(`/event/${createdevent.slug}`);
+        navigate(`/event/${createdEvent.slug}`);
       } else {
         const errorData = await response.json();
         alert(`Failed to create event: ${JSON.stringify(errorData)}`);
