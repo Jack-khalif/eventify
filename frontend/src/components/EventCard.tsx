@@ -11,7 +11,7 @@ interface EventCardProps {
   isPast?: boolean;
 }
 
-export default function EventCard({ id, slug,title, date, location, price, image, isPast = false }: EventCardProps) {
+export default function EventCard({ slug,title, date, location, price, image, isPast = false }: EventCardProps) {
   const navigate = useNavigate();
 
   const getImageUrl = (imagePath: string | undefined | null) => {
@@ -92,7 +92,7 @@ export default function EventCard({ id, slug,title, date, location, price, image
            {formatEventDate(date)}
         </p>
         <p style={{ fontSize: "0.82rem", color: "#64748B", margin: 0 }}>
-          📍 {location || "Location TBA"}
+           {location || "Location TBA"}
         </p>
       </div>
     </div>
